@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
-    [SerializeField] private float speed = 3; //장애물 속도
+    [SerializeField] public float speed; //장애물 속도
     [SerializeField] private float rotationSpeed = 100f; //장애물 회전 속도
     [SerializeField] private bool giveScore = false; //점수를 주는 장애물 체크
     [SerializeField] private int scoreValue = 20; //20점

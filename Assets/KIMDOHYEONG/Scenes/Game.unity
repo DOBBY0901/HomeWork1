@@ -130,6 +130,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 853268816771022780, guid: 718cb49dce799b944bc57ac2d7e0620a,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 3054686924102776228, guid: 718cb49dce799b944bc57ac2d7e0620a,
         type: 3}
       propertyPath: m_Name
@@ -148,7 +153,7 @@ PrefabInstance:
     - target: {fileID: 8570006343226138178, guid: 718cb49dce799b944bc57ac2d7e0620a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 8570006343226138178, guid: 718cb49dce799b944bc57ac2d7e0620a,
         type: 3}
@@ -506,6 +511,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 92298094293048279, guid: a2a04c3aafde1c1469a49eced657e229,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 2484535160199373455, guid: a2a04c3aafde1c1469a49eced657e229,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -519,7 +529,7 @@ PrefabInstance:
     - target: {fileID: 2484535160199373455, guid: a2a04c3aafde1c1469a49eced657e229,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 2484535160199373455, guid: a2a04c3aafde1c1469a49eced657e229,
         type: 3}
@@ -663,7 +673,7 @@ PrefabInstance:
     - target: {fileID: 169926550585816445, guid: ff4efb9b4a09a484fb399689054f8f0a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 169926550585816445, guid: ff4efb9b4a09a484fb399689054f8f0a,
         type: 3}
@@ -699,6 +709,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3202481752212126528, guid: ff4efb9b4a09a484fb399689054f8f0a,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 6429462665602039164, guid: ff4efb9b4a09a484fb399689054f8f0a,
         type: 3}
@@ -1387,8 +1402,14 @@ MonoBehaviour:
   - {fileID: 2071949287816893237, guid: 10023ff7cb319104a843f63e183bac6e, type: 3}
   - {fileID: 8100784361217222668, guid: 51e0430c534fb574dafe7e65ab959dd7, type: 3}
   spawnTime: 3
+  minSpawnTime: 0.2
   spawnX: 10
   spawnY: 6
+  obstacleSpeed: 4
+  maxObstacleSpeed: 20
+  difficultyTime: 5
+  spawnTimeDecrease: 0.35
+  speedIncrease: 1
 --- !u!4 &1646659421
 Transform:
   m_ObjectHideFlags: 0

@@ -3,14 +3,19 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    public TextMeshProUGUI timeText;
-    public TextMeshProUGUI scoreText;
+    [Header("UI Text")]
+    [SerializeField] private TextMeshProUGUI timeText;        // 생존 시간을 표시할 텍스트
+    [SerializeField] private TextMeshProUGUI scoreText;       // 점수를 표시할 텍스트
 
-    void Update()
+    private void Update()
     {
-        if (GameManager.gameManager == null) return;
+        // 방어코드 
+        if (GameManager.Instance == null) return;
 
-        timeText.text = "Time : " + GameManager.gameManager.survivalTime.ToString("F1");
-        scoreText.text = "Score : " + GameManager.gameManager.score;
+        // 생존 시간을 소수점 첫째 자리까지 표시.
+        timeText.text = "Time : " + GameManager.Instance.SurvivalTime.ToString("F1");
+
+        // 현재 점수 표시.
+        scoreText.text = "Score : " + GameManager.Instance.Score;
     }
 }

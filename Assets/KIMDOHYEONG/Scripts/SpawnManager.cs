@@ -2,78 +2,101 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-   [SerializeField] private GameObject[] obstaclePrefabs;
-   [SerializeField] private float spawnTime = 3f; //스폰 시간
-   [SerializeField] private float minSpawnTime = 0.1f; //최소 스폰 시간
+    [Header("Obstacle Prefabs")]
+    [SerializeField] private GameObject[] obstaclePrefabs;        // 랜덤으로 생성할 장애물 배열
 
-   [SerializeField] private float spawnX = 10f; //스폰x좌표
-   [SerializeField] private float spawnY = 6f; //스폰 y좌표
+    [Header("Spawn Settings")]
+    [SerializeField] private float spawnTime = 3f;                // 장애물 생성 간격
+    [SerializeField] private float minSpawnTime = 0.1f;           // 생성 간격이 줄어들 수 있는 최소값
+    [SerializeField] private float spawnX = 10f;                  // 화면 바깥 X축 생성
+    [SerializeField] private float spawnY = 6f;                   // 화면 바깥 Y축 생성
 
-   [SerializeField] private float obstacleSpeed = 4f; //생성되는 장애물 기본 속도
-   [SerializeField] private float maxObstacleSpeed = 10f; //장애물 최고 속도
+    [Header("Target Range")]
+    [SerializeField] private float targetRangeX = 7f;             // 장애물이 향할 화면 안쪽 X 범위
+    [SerializeField] private float targetRangeY = 4f;             // 장애물이 향할 화면 안쪽 Y 범위
 
-   [SerializeField] private float difficultyTime = 5f; //난이도가 증가하는 초
-   [SerializeField] private float spawnTimeDecrease = 0.1f; //스폰이 어느정도로 빨라질건지
-   [SerializeField] private float speedIncrease = 0.5f; //속도가 얼마나 빨라질건지
+    [Header("Obstacle Speed")]
+    [SerializeField] private float obstacleSpeed = 4f;            // 현재 생성되는 장애물 기본 속도
+    [SerializeField] private float maxObstacleSpeed = 10f;        // 장애물 최대 속도
 
-    private float timer;
-    private float difficultyTimer;
+    [Header("Difficulty Settings")]
+    [SerializeField] private float difficultyTime = 5f;           // 몇 초마다 난이도를 올릴지
+    [SerializeField] private float spawnTimeDecrease = 0.1f;      // 난이도 증가 시 생성 간격 감소량
+    [SerializeField] private float speedIncrease = 0.5f;          // 난이도 증가 시 장애물 속도 증가량
 
-    void Update()
+    private float timer;                                          // 스폰 타이머
+    private float difficultyTimer;                                // 난이도 증가 타이머
+
+    private void Update()
     {
+        // 게임오버 상태면 더 이상 생성하거나 난이도를 올리지 않는다.
+        if (GameManager.Instance.IsGameOver) return;
+
         timer += Time.deltaTime;
         difficultyTimer += Time.deltaTime;
 
+        // 현재 생성 간격에 스폰 타이머가 도달하면 장애물을 생성한다.
         if (timer >= spawnTime)
         {
             SpawnObstacle();
             timer = 0f;
         }
+
+        // 일정 시간이 지나면 난이도를 올린다.
         if (difficultyTimer >= difficultyTime)
         {
             IncreaseDifficulty();
             difficultyTimer = 0f;
         }
-
     }
 
-    void SpawnObstacle()
+    /// <summary>
+    /// 화면 바깥 랜덤한 곳에서 장애물을 생성하고,화면 안의 랜덤 위치를 향하도록 설정한다.
+    /// </summary>
+    private void SpawnObstacle()
     {
-        Vector2 spawnPos = Vector2.zero;
+        Vector2 spawnPosition = Vector2.zero;
 
+        // 0: 위, 1: 아래, 2: 왼쪽, 3: 오른쪽
         int side = Random.Range(0, 4);
 
         if (side == 0)
         {
-            spawnPos = new Vector2(Random.Range(-spawnX, spawnX), spawnY);
+            spawnPosition = new Vector2(Random.Range(-spawnX, spawnX), spawnY);
         }
         else if (side == 1)
         {
-            spawnPos = new Vector2(Random.Range(-spawnX, spawnX), -spawnY);
+            spawnPosition = new Vector2(Random.Range(-spawnX, spawnX), -spawnY);
         }
         else if (side == 2)
         {
-            spawnPos = new Vector2(-spawnX, Random.Range(-spawnY, spawnY));
+            spawnPosition = new Vector2(-spawnX, Random.Range(-spawnY, spawnY));
         }
         else
         {
-            spawnPos = new Vector2(spawnX, Random.Range(-spawnY, spawnY));
+            spawnPosition = new Vector2(spawnX, Random.Range(-spawnY, spawnY));
         }
 
-        Vector2 targetPos = new Vector2(
-            Random.Range(-7f, 7f),
-            Random.Range(-4f, 4f)
-        );
+        // 장애물이 향할 화면 안쪽의 랜덤 목표 지점
+        Vector2 targetPosition = new Vector2(Random.Range(-targetRangeX, targetRangeX),Random.Range(-targetRangeY, targetRangeY));
+        // 생성 위치에서 목표 위치로 향하는 방향 벡터
+        Vector2 moveDirection = targetPosition - spawnPosition;
 
-        Vector2 moveDir = targetPos - spawnPos;
-
+        // 배열 중 하나를 랜덤으로 선택해서 생성
         int randomIndex = Random.Range(0, obstaclePrefabs.Length);
-        GameObject obj = Instantiate(obstaclePrefabs[randomIndex], spawnPos, Quaternion.identity);
+        GameObject obstacleObject = Instantiate(obstaclePrefabs[randomIndex], spawnPosition, Quaternion.identity);
 
-        obj.GetComponent<Obstacle>().SetDirection(moveDir);
+        // 생성된 장애물에게 방향과 현재 속도 부여
+        Obstacle obstacle = obstacleObject.GetComponent<Obstacle>();
+        obstacle.SetDirection(moveDirection);
+        obstacle.SetSpeed(obstacleSpeed);
     }
 
-    void IncreaseDifficulty()
+    /// <summary>
+    /// 시간이 지남에 따라 생성 간격은 줄이고, 장애물 속도는 증가시킨다.
+    /// 단, 각각 최소/최대 제한을 넘지 않도록 한다.
+    /// </summary>
+    private void IncreaseDifficulty()
     {
         if (spawnTime > minSpawnTime)
         {
